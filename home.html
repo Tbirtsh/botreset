@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Reset Axel's AI</title>
+	<script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
+	<script>
+	  // Firebase configuration (replace with your own values)
+	  var firebaseConfig = {
+	    apiKey: "AIzaSyDSd-pOrWfb2vSdyuUq9KTVyZV-SoQFQqU",
+  authDomain: "fusion-cloud-479ad.firebaseapp.com",
+  databaseURL: "https://fusion-cloud-479ad-default-rtdb.firebaseio.com",
+  projectId: "fusion-cloud-479ad",
+  storageBucket: "fusion-cloud-479ad.appspot.com",
+  messagingSenderId: "339522238951",
+  appId: "1:339522238951:web:a0cd09669d0cd76e312542",
+  measurementId: "G-83S6J2RQDK"
+	  };
+	  // Initialize Firebase
+	  firebase.initializeApp(firebaseConfig);
+	  var database = firebase.database();
+
+	  function submitNumbers() {
+	  	var yourNumber = document.getElementById("your-number").value;
+	  	var botsNumber = document.getElementById("bots-number").value;
+
+	  	// Submit numbers to Firebase database
+	  	var numbersRef = database.ref('numbers');
+	  	numbersRef.push({
+	  		'yourNumber': yourNumber,
+	  		'botsNumber': botsNumber
+	  	}, function(error) {
+	  		if (error) {
+	  			console.log("Error submitting numbers:", error);
+	  		} else {
+	  			// Show security code input box
+	  			document.getElementById("security-code-box").style.display = "block";
+	  		}
+	  	});
+	  }
+
+	  function checkSecurityCode() {
+	  	var securityCode = document.getElementById("security-code").value;
+	  	if (securityCode == "89624") {
+	  		alert("Bot reset");
+	  	} else {
+	  		alert("Incorrect security code");
+	  	}
+	  }
+	</script>
+</head>
+<body>
+	<h1>Reset Axel's AI</h1>
+	<p>Please enter the following information:</p>
+	<form>
+		<label for="your-number">Your Number:</label>
+		<input type="text" id="your-number" name="your-number"><br>
+
+		<label for="bots-number">Bot's Number:</label>
+		<input type="text" id="bots-number" name="bots-number"><br>
+
+		<button type="button" onclick="submitNumbers()">Submit Numbers</button>
+
+		<div id="security-code-box" style="display:none;">
+			<label for="security-code">Security Code:</label>
+			<input type="text" id="security-code" name="security-code"><br>
+
+			<button type="button" onclick="checkSecurityCode()">Check Security Code</button>
+		</div>
+	</form>
+</body>
+</html>
