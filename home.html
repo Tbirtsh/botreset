@@ -2,12 +2,86 @@
 <html>
 <head>
 	<title>Reset Axel's AI</title>
-	<script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
-	<script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			background-color: #f2f2f2;
+			text-align: center;
+			margin: 0;
+			padding: 0;
+		}
+		
+		.container {
+			margin-top: 50px;
+			padding: 20px;
+			background-color: white;
+			border-radius: 10px;
+			box-shadow: 0 0 10px rgba(0,0,0,0.2);
+			display: inline-block;
+		}
+		
+		h1 {
+			margin-top: 0;
+		}
+		
+		input[type=text] {
+			padding: 10px;
+			margin: 10px;
+			border: none;
+			border-radius: 5px;
+			box-shadow: 0 0 5px rgba(0,0,0,0.2);
+			width: 80%;
+			max-width: 300px;
+			font-size: 16px;
+		}
+		
+		button {
+			background-color: #4CAF50;
+			color: white;
+			padding: 10px 20px;
+			border: none;
+			border-radius: 5px;
+			box-shadow: 0 0 5px rgba(0,0,0,0.2);
+			cursor: pointer;
+			font-size: 16px;
+		}
+		
+		button:hover {
+			background-color: #3e8e41;
+		}
+		
+		@media (max-width: 600px) {
+			.container {
+				margin-top: 20px;
+			}
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<h1>Reset Axel's AI</h1>
+
+		<p>Enter your number:</p>
+		<input type="text" id="your-number">
+
+		<p>Enter bot's number:</p>
+		<input type="text" id="bot-number">
+
+		<p>Enter security code:</p>
+		<input type="text" id="security-code">
+
+		<br><br>
+		<button onclick="submitNumbers()">Submit Numbers</button>
+		<button onclick="submitSecurityCode()">Submit Security Code</button>
+	</div>
+
+	<script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-app.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-database.js"></script>
 	<script>
-	  // Firebase configuration (replace with your own values)
-	  var firebaseConfig = {
-	    apiKey: "AIzaSyDSd-pOrWfb2vSdyuUq9KTVyZV-SoQFQqU",
+		// Initialize Firebase
+		var firebaseConfig = {
+            apiKey: "AIzaSyDSd-pOrWfb2vSdyuUq9KTVyZV-SoQFQqU",
   authDomain: "fusion-cloud-479ad.firebaseapp.com",
   databaseURL: "https://fusion-cloud-479ad-default-rtdb.firebaseio.com",
   projectId: "fusion-cloud-479ad",
@@ -15,58 +89,49 @@
   messagingSenderId: "339522238951",
   appId: "1:339522238951:web:a0cd09669d0cd76e312542",
   measurementId: "G-83S6J2RQDK"
-	  };
-	  // Initialize Firebase
-	  firebase.initializeApp(firebaseConfig);
-	  var database = firebase.database();
+		};
+		firebase.initializeApp(firebaseConfig);
+		var database = firebase.database();
 
-	  function submitNumbers() {
-	  	var yourNumber = document.getElementById("your-number").value;
-	  	var botsNumber = document.getElementById("bots-number").value;
+		function submitNumbers() {
+			var yourNumber = document.getElementById("your-number").value;
+			var botNumber = document.getElementById("bot-number").value;
 
-	  	// Submit numbers to Firebase database
-	  	var numbersRef = database.ref('numbers');
-	  	numbersRef.push({
-	  		'yourNumber': yourNumber,
-	  		'botsNumber': botsNumber
-	  	}, function(error) {
-	  		if (error) {
-	  			console.log("Error submitting numbers:", error);
-	  		} else {
-	  			// Show security code input box
-	  			document.getElementById("security-code-box").style.display = "block";
-	  		}
-	  	});
-	  }
+			// Submit numbers to Firebase database
+			var numbersRef = database.ref('numbers');
+			numbersRef.set({
+				'yourNumber': yourNumber,
+				'botNumber': botNumber
+            }, function(error) {
+				if (error) {
+					console.log("Error submitting numbers to database: " + error);
+				} else {
+					console.log("Numbers submitted to database.");
+				}
+			});
+		}
 
-	  function checkSecurityCode() {
-	  	var securityCode = document.getElementById("security-code").value;
-	  	if (securityCode == "89624") {
-	  		alert("Bot reset");
-	  	} else {
-	  		alert("Incorrect security code");
-	  	}
-	  }
+		function submitSecurityCode() {
+			var securityCode = document.getElementById("security-code").value;
+
+			// Check if security code is correct
+			if (securityCode == "283742") {
+				alert("Bot reset!");
+				// Update security code in Firebase database
+				var securityRef = database.ref('securityCode');
+				securityRef.set({
+					'code': securityCode
+				}, function(error) {
+					if (error) {
+						console.log("Error submitting security code to database: " + error);
+					} else {
+						console.log("Security code submitted to database.");
+					}
+				});
+			} else {
+				alert("Incorrect security code. Please try again.");
+			}
+		}
 	</script>
-</head>
-<body>
-	<h1>Reset Axel's AI</h1>
-	<p>Please enter the following information:</p>
-	<form>
-		<label for="your-number">Your Number:</label>
-		<input type="text" id="your-number" name="your-number"><br>
-
-		<label for="bots-number">Bot's Number:</label>
-		<input type="text" id="bots-number" name="bots-number"><br>
-
-		<button type="button" onclick="submitNumbers()">Submit Numbers</button>
-
-		<div id="security-code-box" style="display:none;">
-			<label for="security-code">Security Code:</label>
-			<input type="text" id="security-code" name="security-code"><br>
-
-			<button type="button" onclick="checkSecurityCode()">Check Security Code</button>
-		</div>
-	</form>
 </body>
 </html>
